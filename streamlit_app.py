@@ -8,11 +8,11 @@ st.set_page_config(
     page_icon='💰', 
     initial_sidebar_state="auto", 
     menu_items=None,
-    # layout='wide'
+    layout='wide'
 )
 st.title("Household Budget Balancer 💰")
 
-col1, col2 = st.columns(2)
+col1, col2, col3 = st.columns(3)
 
 with col1:
     income_a = st.number_input(
@@ -20,17 +20,18 @@ with col1:
         min_value=0, max_value=1000000,
         step=1, value=50000
     )
+    joint_expenses = st.number_input(
+        "💳 Joint Monthly Expenses (ex: rent, groceries, ...)",  
+        min_value=0, max_value=1000000,
+        step=1, value=2000
+    )
 with col2:
     income_b = st.number_input(
         "🤷‍♂️ Person B's Annual Income (after taxes)",
         min_value=0, max_value=1000000,
         step=1, value=40000
     )
-joint_expenses = st.number_input(
-    "💳 Joint Monthly Expenses (ex: rent, groceries, ...)",  
-    min_value=0, max_value=1000000,
-    step=1, value=2000
-)
+
 
 # -----------------math n stuff
 
@@ -49,66 +50,75 @@ viz_df['% of Combined Income'] = (viz_df['% of Combined Income'] * 100).round(0)
 
 # ----------------vizin
 
-base = alt.Chart(viz_df).encode(
-    theta=alt.Theta(field='Annual Income', type="quantitative", stack=True),
-    color=alt.Color(field="Person", type="nominal"),
-    tooltip=[
-            'Person',
-            '% of Combined Income',
-            'Annual Income'
-        ]
-)
-donut = base.mark_arc(outerRadius=100, innerRadius=50)
-text = base.mark_text(radius=120, size=15).encode(text='% of Combined Income'+":N")
-st.altair_chart(
-    (donut + text).properties(
-    title="Combined Annual Income Breakdown"
-).interactive(), use_container_width=True)
+with col3:
+    base = alt.Chart(viz_df).encode(
+        theta=alt.Theta(field='Annual Income', type="quantitative", stack=True),
+        color=alt.Color(field="Person", type="nominal"),
+        tooltip=[
+                'Person',
+                '% of Combined Income',
+                'Annual Income'
+            ]
+    )
+    donut = base.mark_arc(outerRadius=100, innerRadius=50)
+    text = base.mark_text(radius=120, size=15).encode(text='% of Combined Income'+":N")
+    st.altair_chart(
+        (donut + text).properties(
+        title="Combined Annual Income Breakdown"
+    ).interactive(), use_container_width=True)
 
 
 st.markdown('### 📊 Fair Distribution of Joint Expenses')
 
-bars = alt.Chart(viz_df).mark_bar().encode(
-    y='Person',
-    x = alt.Y("Amount of Joint Expenses", axis=alt.Axis(format='$s'))
-)
-plot = (bars).properties(
-    title="Amount ($) of Expenses Covered Per Person"
-).interactive()
-st.altair_chart(plot, use_container_width=True)
+col1, col2 = st.columns(2)
 
-base = alt.Chart(viz_df).encode(
-    theta=alt.Theta(field='Amount of Joint Expenses', type="quantitative", stack=True),
-    color=alt.Color(field="Person", type="nominal"),
-    tooltip=[
-            'Person',
-            '% of Joint Expenses',
-            'Amount of Joint Expenses'
-        ]
-)
-donut = base.mark_arc(outerRadius=100, innerRadius=50)
-text = base.mark_text(radius=120, size=15).encode(text='% of Joint Expenses'+":N")
-st.altair_chart(
-    (donut + text).properties(
-    title="% of Expenses Covered Per Person"
-).interactive(), use_container_width=True)
+with col1:
+    bars = alt.Chart(viz_df).mark_bar().encode(
+        y='Person',
+        x = alt.Y("Amount of Joint Expenses", axis=alt.Axis(format='$s'))
+    )
+    plot = (bars).properties(
+        title="Amount ($) of Expenses Covered Per Person"
+    ).interactive()
+    st.altair_chart(plot, use_container_width=True)
+
+with col2:
+    base = alt.Chart(viz_df).encode(
+        theta=alt.Theta(field='Amount of Joint Expenses', type="quantitative", stack=True),
+        color=alt.Color(field="Person", type="nominal"),
+        tooltip=[
+                'Person',
+                '% of Joint Expenses',
+                'Amount of Joint Expenses'
+            ]
+    )
+    donut = base.mark_arc(outerRadius=100, innerRadius=50)
+    text = base.mark_text(radius=120, size=15).encode(text='% of Joint Expenses'+":N")
+    st.altair_chart(
+        (donut + text).properties(
+        title="% of Expenses Covered Per Person"
+    ).interactive(), use_container_width=True)
 
 st.markdown("### 🤑 What's Left Over per Person?")
 
-bars = alt.Chart(viz_df).mark_bar().encode(
-    y='Person',
-    x = alt.Y("% of Income Left Over Per Person", axis=alt.Axis(format='%'))
-)
-plot = (bars).properties(
-    title="% of Income Left Over Per Person"
-).interactive()
-st.altair_chart(plot, use_container_width=True)
+col1, col2 = st.columns(2)
 
-bars = alt.Chart(viz_df).mark_bar().encode(
-    y='Person',
-    x = alt.Y("Amount Left Over (per month)", axis=alt.Axis(format='$s'))
-)
-plot = (bars).properties(
-    title="Amount Left Over Per Person (per month)"
-).interactive()
-st.altair_chart(plot, use_container_width=True)
+with col1:
+    bars = alt.Chart(viz_df).mark_bar().encode(
+        y='Person',
+        x = alt.Y("% of Income Left Over Per Person", axis=alt.Axis(format='%'))
+    )
+    plot = (bars).properties(
+        title="% of Income Left Over Per Person"
+    ).interactive()
+    st.altair_chart(plot, use_container_width=True)
+
+with col2:
+    bars = alt.Chart(viz_df).mark_bar().encode(
+        y='Person',
+        x = alt.Y("Amount Left Over (per month)", axis=alt.Axis(format='$s'))
+    )
+    plot = (bars).properties(
+        title="Amount ($) Left Over Per Person (per month)"
+    ).interactive()
+    st.altair_chart(plot, use_container_width=True)
