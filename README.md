@@ -4,4 +4,4 @@ Streamlit dashboard that fairly balances joint expenses between 2 individuals ba
 Access it here: [householdbudgetbalancer.streamlit.app](https://householdbudgetbalancer.streamlit.app/)
 
 Here's what it looks like:
-<img width="1728" alt="image" src="https://github.com/parker84/household-budget-balancer/assets/12496987/62f8e5a0-595b-42b3-bb08-73d498c1deb1">
+<img width="1728" alt="image" src="https://github.com/parker84/household-budget-balancer/assets/12496987/a75cd165-d30f-4a58-accc-19b950d02049">
