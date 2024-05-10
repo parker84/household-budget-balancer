@@ -12,7 +12,7 @@ st.set_page_config(
     layout='wide'
 )
 st.title("Household Budget Balancer 💰")
-st.markdown('**Purpose**: The purpose of this app is to enable to couples to fairly distribute their joint expenses.')
+st.caption('The purpose of this app is to enable to couples to fairly distribute their joint expenses ⚖️')
 
 col1, col2 = st.columns((2, 1))
 
